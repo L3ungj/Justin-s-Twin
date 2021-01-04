@@ -1,13 +1,13 @@
 import discord
 from discord.ext import commands
 import os
-import random
-import time
 
 with open("token.txt", "r") as fi:
     my_token = fi.read()
 
-client = commands.Bot(command_prefix='/')
+intents = discord.Intents.default()
+intents.members = True
+client = commands.Bot(command_prefix='/', intents=intents)
 
 
 @client.event

@@ -48,6 +48,18 @@ addscore = [40, 100, 300, 1200]
 emj = [":white_large_square:", ":yellow_square:", ":blue_square:", ":red_square:", ":green_square:",
        ":brown_square:", ":orange_square:", ":purple_square:"]
 
+piece_counter = [10, 10, 10, 10, 10, 10, 10]
+
+
+def myrandint():
+    for i in range(7):
+        if piece_counter[i] == 0:
+            piece_counter[i] = 10
+            return i
+    num = random.randint(0, 6)
+    piece_counter[num] = 10
+    return num
+
 
 class tpiece:
     blocks = [vec2(0, 0)] * 4
@@ -254,8 +266,10 @@ class tgame:
         emb.set_footer(text=f'Level: {self.level}, Score:{self.score}')
         for nam, des in descs:
             emb.add_field(name=nam, value=des, inline=False)
-        await self.msg.edit(embed=emb)
-
+        try:
+            await self.msg.edit(embed=emb)
+        except discord.HTTPException:
+            pass
     def logic(self):
         if self.falling:
             if len(self.userinput) > 0:
@@ -310,7 +324,7 @@ class tgame:
                 self.ttd = self.tpd
         else:
             self.need_draw = True
-            self.cur_tpiece = tpiece(self, random.randint(0, 6))
+            self.cur_tpiece = tpiece(self, myrandint())
             self.falling = 1
             self.ttd = self.tpd
 
@@ -320,9 +334,9 @@ class tgame:
     def setblock(self, v2: vec2, ttype):
         self.screen[v2.x][v2.y] = ttype
 
-    async def refresh(self):
+    async def refresh(self, channel):
         await self.msg.delete()
-        newmsg = await self.msg.channel.send(START_TEXT)
+        newmsg = await channel.send(START_TEXT)
         self.msg = newmsg
 
     async def start(self):
@@ -358,23 +372,23 @@ class Tetris(commands.Cog):
             await cur_games[ctx.author.id].start()
 
     @commands.command()
-    async def debug(self, ctx):
-        tgamei = tgame(20, ctx.channel, ctx.author.id)
-        await tgamei.draw()
-
-    @commands.command()
-    async def run(self, ctx, *, code=""):
-        if code == "":
-            await ctx.send('Please enter some code.')
+    async def darkmode(self, ctx, text=""):
+        if text == "":
+            if emj[0] == ":white_large_square:":
+                emj[0] = ":black_large_square:"
+            else:
+                emj[0] = ":white_large_square:"
+        elif text == "on" or text == "1":
+            emj[0] = ":black_large_square:"
+        elif text == "off" or text == "0":
+            emj[0] = ":white_large_square:"
+        else:
+            await ctx.send("Please enter either 'on' or 'off'.")
             return
-        if ctx.author.id != 403918298116259858:
-            await ctx.send('Only Justin the Great can use this command!')
-            return
-        try:
-            exec(code)
-        except Exception as e:
-            await ctx.send(f'Error: {e}')
-            return
+        if emj[0] == ":black_large_square:":
+            await ctx.send("Turned on darkmode.")
+        else:
+            await ctx.send("Turned off darkmode.")
 
     @commands.Cog.listener()
     async def on_message(self, message):
@@ -385,7 +399,7 @@ class Tetris(commands.Cog):
                 await message.delete()
                 return
             if message.content == 'o':
-                await cur_games[message.author.id].refresh()
+                await cur_games[message.author.id].refresh(message.channel)
                 await message.delete()
                 return
             if message.content == 'end':

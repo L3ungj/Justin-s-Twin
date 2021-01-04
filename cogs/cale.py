@@ -20,6 +20,7 @@ def cale(expr):
     def mytan(x):
         if x%180 == 90:
             raise ModuleNotFoundError
+            return
         return math.tan(math.radians(x))
 
     ops = OrderedDict([
