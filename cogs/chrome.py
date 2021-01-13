@@ -11,7 +11,7 @@ import asyncio
 
 driver = webdriver.Chrome('C:\\Users\\justi\\Documents\\chromedriver')
 wait = WebDriverWait(driver, 10)
-SLEEP_TIME = 7
+SLEEP_TIME = 10
 
 
 def transform(s):
@@ -128,6 +128,16 @@ class Chrome(commands.Cog):
         input_box = wait.until(EC.presence_of_element_located((By.XPATH, inp_xpath)))
         input_box.send_keys(message + Keys.ENTER)
         await ctx.send(f'sent {message} to {target}')
+
+    @commands.command(aliases=['cwt'])
+    async def change_wait_time(self, ctx, inp):
+        if not inp.isalpha():
+            await ctx.send('Please input a number!')
+            return
+        inp = float(inp)
+        global SLEEP_TIME
+        SLEEP_TIME = inp
+        await ctx.send(f'Changed wait time to {SLEEP_TIME}.')
 
 
 def setup(client):

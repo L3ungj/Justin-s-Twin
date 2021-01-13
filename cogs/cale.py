@@ -188,17 +188,26 @@ def cale(expr):
     else:
         return "Too many numbers/ Missing operators"
 
+def correct(expr:str):
+    if expr.count('(') > expr.count(')'):
+        expr += ')' * (expr.count('(') - expr.count(')'))
+    expr = expr.replace('In', 'ln')
+    return expr
 
 class Cale(commands.Cog):
     def __init__(self, client):
         self.client = client
 
     @commands.command()
-    async def cal(self, ctx, *, expression):
+    async def cal(self, ctx, *, expression=""):
         if expression == "":
             await ctx.send('You must enter an expression!')
             return
-        await ctx.send(f'Calculating {expression}...')
+        new_expr = correct(expression)
+        if new_expr != expression:
+            expression = new_expr
+            await ctx.send(f'Assuming {expression} ,')
+        await ctx.send(f'Calculating {expression} ...')
         try:
             result = cale(expression)
         except Exception as inst:

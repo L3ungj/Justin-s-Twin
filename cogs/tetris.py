@@ -48,11 +48,10 @@ addscore = [40, 100, 300, 1200]
 emj = [":white_large_square:", ":yellow_square:", ":blue_square:", ":red_square:", ":green_square:",
        ":brown_square:", ":orange_square:", ":purple_square:"]
 
-piece_counter = [10, 10, 10, 10, 10, 10, 10]
 
-
-def myrandint():
+def myrandint(piece_counter):
     for i in range(7):
+        piece_counter[i] -= 1
         if piece_counter[i] == 0:
             piece_counter[i] = 10
             return i
@@ -236,6 +235,7 @@ class tgame:
         self.person = person
         self.paused = False
         self.need_draw = False
+        self.piece_counter = [10, 10, 10, 10, 10, 10, 10]
 
     async def draw(self):
         descs = []
@@ -270,6 +270,7 @@ class tgame:
             await self.msg.edit(embed=emb)
         except discord.HTTPException:
             pass
+
     def logic(self):
         if self.falling:
             if len(self.userinput) > 0:
@@ -324,7 +325,7 @@ class tgame:
                 self.ttd = self.tpd
         else:
             self.need_draw = True
-            self.cur_tpiece = tpiece(self, myrandint())
+            self.cur_tpiece = tpiece(self, myrandint(self.piece_counter))
             self.falling = 1
             self.ttd = self.tpd
 
@@ -389,6 +390,13 @@ class Tetris(commands.Cog):
             await ctx.send("Turned on darkmode.")
         else:
             await ctx.send("Turned off darkmode.")
+
+    @commands.command()
+    async def size(self, ctx, l=20, w=10):
+        global WIDTH, LENGTH
+        WIDTH = w
+        LENGTH = l
+        await ctx.send(f'Changed length, width to {LENGTH}, {WIDTH}.')
 
     @commands.Cog.listener()
     async def on_message(self, message):

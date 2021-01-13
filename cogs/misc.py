@@ -170,22 +170,25 @@ class Misc(commands.Cog):
             return
         argdict = {}
         if args != "":
-            for arg in args.split(' '):
+            for arg in args.split(';'):
                 arglist = arg.split('=')
                 tarlist = arglist[1].split(',')
-                for tar in tarlist:
-                    argdict[arglist[0]] = tar
+                argdict[arglist[0]] = tarlist
 
         def mycheck(m):
             if args == "":
                 return True
-            for arg, tar in argdict.items():
+            for arg, tarlist in argdict.items():
                 if arg == "user":
-                    if m.author.id == tar:
-                        return True
+                    for tar in tarlist:
+                        tar = tar.strip('<@!> ')
+                        if m.author.id == int(tar):
+                            return True
                 elif arg == "startswith":
-                    if m.content.startswith(tar):
-                        return True
+                    for tar in tarlist:
+                        tar = tar.strip()
+                        if m.content.startswith(tar):
+                            return True
             return False
 
         msgs = await ctx.channel.purge(limit=int(amount) + 1, check=mycheck)
@@ -193,6 +196,7 @@ class Misc(commands.Cog):
 
     @commands.command(name='r')
     async def repeat(self, ctx, *, text=""):
+        print(text)
         if text == "":
             await ctx.send('where text')
             return
@@ -200,6 +204,11 @@ class Misc(commands.Cog):
             await asyncio.gather(ctx.send(text), ctx.message.delete())
         except discord.Forbidden:
             pass
+
+    @commands.Cog.listener()
+    async def on_message(self, message):
+        if message.author.id == 695542908538978346:
+            await message.channel.send('bio gay')
 
     @commands.command()
     async def run(self, ctx, *, code=""):
