@@ -108,7 +108,6 @@ class Chrome(commands.Cog):
             emb.set_image(url=ans_t.get_attribute('src'))
             await ctx.send(embed=emb)
 
-
     @commands.command(aliases=['w'])
     async def wts(self, ctx, *, inp):
         driver.switch_to.window(driver.window_handles[1])
@@ -131,10 +130,14 @@ class Chrome(commands.Cog):
 
     @commands.command(aliases=['cwt'])
     async def change_wait_time(self, ctx, inp):
-        if not inp.isalpha():
-            await ctx.send('Please input a number!')
+        try:
+            inp = float(inp)
+        except Exception as e:
+            await ctx.send(f'Enter a number greater than 0 and smaller than 10!')
             return
-        inp = float(inp)
+        if not 0 < inp <= 10:
+            await ctx.send(f'Enter a number greater than 0 and smaller than 10!')
+            return
         global SLEEP_TIME
         SLEEP_TIME = inp
         await ctx.send(f'Changed wait time to {SLEEP_TIME}.')

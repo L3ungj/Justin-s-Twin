@@ -71,8 +71,8 @@ async def load(ctx, extension):
     except commands.ExtensionAlreadyLoaded:
         await ctx.send(f'{extension} is already loaded.')
         return
-    except:
-        await ctx.send(f'The code in {extension} is written badly.')
+    except Exception as e:
+        await ctx.send(f'The code in {extension} is written badly.\nError: {e}.')
         return
     await ctx.send(f'Loaded {extension}.')
 
@@ -95,7 +95,7 @@ async def reload(ctx, extension):
 
 for file in os.listdir('./cogs'):
     if file.endswith('.py'):
-        if not file == 'chrome.py':
+        if file not in ['chrome.py', 'debug.py']:
             client.load_extension(f'cogs.{file[:-3]}')
 
 client.run(my_token)

@@ -97,6 +97,7 @@ class Misc(commands.Cog):
             await ctx.send(member.mention)
         # await ctx.send('shut the fuck up!!!')
 
+
     @commands.command()
     async def shownames(self, ctx):
         txt = ""
@@ -150,17 +151,11 @@ class Misc(commands.Cog):
         for mem in ctx.guild.members:
             try:
                 await mem.move_to(channel)
-            except discord.HTTPException:
+            except discord.HTTPException as e:
+                print(e)
                 pass
 
-    @commands.command()
-    async def deb(self, ctx):
-        server = self.client.get_guild(403917475588079617)
-        for cha in server.channels:
-            if type(cha) is discord.channel.VoiceChannel and len(cha.members) > 0:
-                print(f'{cha.name}({[mem.name for mem in cha.members]}): {cha.id}')
-
-    @commands.command()
+    @commands.command(aliases=['purge'])
     async def clear(self, ctx, amount=0, *, args=""):
         if ctx.author.id != 403918298116259858 and ctx.author.id != 403885864075395072:
             await ctx.send('Only Justin the Great can use this command! (to prevent troll)')
@@ -205,10 +200,11 @@ class Misc(commands.Cog):
         except discord.Forbidden:
             pass
 
-    @commands.Cog.listener()
-    async def on_message(self, message):
-        if message.author.id == 695542908538978346:
-            await message.channel.send('bio gay')
+    # @commands.Cog.listener()
+    # async def on_message(self, message):
+    #     for role in message.author.roles:
+    #         if role.id == 798763184378609735:
+    #             await message.channel.send('bio gay')
 
     @commands.command()
     async def run(self, ctx, *, code=""):
@@ -223,7 +219,6 @@ class Misc(commands.Cog):
         except Exception as e:
             await ctx.send(f'Error: {e}')
             return
-
 
 def setup(client):
     client.add_cog(Misc(client))
