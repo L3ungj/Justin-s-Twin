@@ -11,6 +11,9 @@ class Orz(commands.Cog):
 
     @commands.command()
     async def orz(self, ctx, guy: discord.Member = None, *, reason="None"):
+        if len(reason) > 30:
+            await ctx.send('Your reason must be 30 or fewer in length!')
+            return
         memClient = ctx.guild.get_member(678828033305608204)
         selfname = memClient.nick
         if not guy:
@@ -34,7 +37,7 @@ class Orz(commands.Cog):
                 if len(orzdict[gid][pid]) == 7:
                     orzdict[gid][pid].pop()
             with open(FILENAME, 'w') as fo:
-                json.dump(orzdict, fo, indent=6)
+                json.dump(orzdict, fo, indent=2)
 
     @commands.command()
     async def orzlist(self, ctx):

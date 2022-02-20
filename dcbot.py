@@ -2,6 +2,7 @@ import discord
 from discord.ext import commands
 import os
 
+
 with open("token.txt", "r") as fi:
     my_token = fi.read()
 

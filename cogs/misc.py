@@ -155,6 +155,11 @@ class Misc(commands.Cog):
                 print(e)
                 pass
 
+    @commands.command()
+    async def chest(self, ctx):
+        emb = discord.Embed(title='chest', description='[chest is fun](https://chess.com)')
+        await ctx.send(embed=emb)
+
     @commands.command(aliases=['purge'])
     async def clear(self, ctx, amount=0, *, args=""):
         if ctx.author.id != 403918298116259858 and ctx.author.id != 403885864075395072:

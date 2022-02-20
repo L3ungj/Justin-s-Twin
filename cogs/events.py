@@ -10,7 +10,7 @@ class Events(commands.Cog):
     def __init__(self, cli):
         self.client = cli
 
-    @commands.command()
+    @commands.command(aliases=['ae'])
     async def addevent(self, ctx, indate="", *, namedesc=""):
         gid = str(ctx.guild.id)
         datelist = indate.split('/')
@@ -26,7 +26,7 @@ class Events(commands.Cog):
             await ctx.send('Invalid date.')
             return
         if namedesc == "":
-            await ctx.send('You must enter a name.')
+            await ctx.send('You must enter an event name.')
             return
         eventdate = datetime.date(y, m, d)
         with open(FILENAME) as fi:
@@ -40,14 +40,15 @@ class Events(commands.Cog):
                 json.dump(eventdict, fo, indent=2)
         await ctx.send(f'Added event on {eventdate.strftime("%a, %d/%m/%y")}, {namedesc}')
 
-    @commands.command()
+    @commands.command(aliases=['se', 'el', 'eventlist'])
     async def showevents(self, ctx):
         gid = str(ctx.guild.id)
         na = f"Event list of {self.client.get_guild(int(gid)).name}"
         desc = ""
         with open(FILENAME) as fi:
             eventdict = json.load(fi)
-            eventdates = eventdict[gid].keys()
+            eventdates = list(eventdict[gid].keys())
+            eventdates.sort()
             today = str(datetime.date.today())
             for date in eventdates:
                 if date < today:
