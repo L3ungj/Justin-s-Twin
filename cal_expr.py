@@ -66,6 +66,8 @@ def cale(expr):
     constants = {
         'e': math.e,
         'pi': math.pi,
+        'tau': (math.pi * 2),
+        'phi': ((1+math.sqrt(5))/2),
         'ans': lastresult
     }
     while i < n:
