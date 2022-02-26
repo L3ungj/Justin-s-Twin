@@ -17,8 +17,12 @@ def cale(expr):
     def mytan(x):
         if x%180 == 90:
             raise ModuleNotFoundError
-            return
         return math.tan(math.radians(x))
+
+    def myfact(x):
+        if x > 100000:
+            raise ModuleNotFoundError
+        return math.factorial(x)
         
     def heron(a, b, c):
         s = (a+b+c)/2
@@ -42,7 +46,7 @@ def cale(expr):
         ("logtwo", lambda x: math.log2(x)),
         ("log", lambda x, y: math.log(x, y)),
         ("sqrt", lambda x: math.sqrt(x)),
-        ("!", lambda x: math.factorial(x)),
+        ("!", myfact),
         ("asind", lambda x: math.degrees(math.asin(x))),
         ("acosd", lambda x: math.degrees(math.acos(x))),
         ("atand", lambda x: math.degrees(math.atan(x))),
