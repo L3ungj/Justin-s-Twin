@@ -25,7 +25,7 @@ class Cale(commands.Cog):
         if new_expr != expression:
             expression = new_expr
             await ctx.send(f'Assuming {expression} ,')
-        await ctx.send(f'Calculating {expression} ...')
+        await ctx.send(f'Calculating `{expression}` ...')
         try:
             result = self.calc.cale(expression)
         except Exception as inst:
