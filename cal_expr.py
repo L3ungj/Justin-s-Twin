@@ -222,11 +222,11 @@ class Calculator:
             except Exception as e:
                 print(e)
             if type(ans) is complex:
-                if abs(ans.real) < 1e-15:
+                if abs(ans.real) < 1e-13:
                     ans = complex(0, ans.imag)
-                if abs(ans.imag) < 1e-15:
+                if abs(ans.imag) < 1e-13:
                     ans = ans.real
-            if abs(ans) < 1e-15:
+            if abs(ans) < 1e-13:
                 ans = 0
             self.lastresult = ans
             return ans
