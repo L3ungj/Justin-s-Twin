@@ -3,7 +3,7 @@ from discord.ext import commands
 from collections import OrderedDict
 import math
 from inspect import signature
-from cal_expr import cale
+from cal_expr import Calculator
 
 def correct(expr:str):
     if expr.count('(') > expr.count(')'):
@@ -14,6 +14,7 @@ def correct(expr:str):
 class Cale(commands.Cog):
     def __init__(self, client):
         self.client = client
+        self.calc = Calculator()
 
     @commands.command()
     async def cal(self, ctx, *, expression=""):
@@ -26,15 +27,13 @@ class Cale(commands.Cog):
             await ctx.send(f'Assuming {expression} ,')
         await ctx.send(f'Calculating {expression} ...')
         try:
-            result = cale(expression)
+            result = self.calc.cale(expression)
         except Exception as inst:
             await ctx.send(f'Error: {inst}')
             return
         if type(result) is str:
             await ctx.send(f'Error: {result}')
         else:
-            global lastresult
-            lastresult = result
             try:
                 await ctx.send(f'The result is {result}.')
             except Exception as inst:
