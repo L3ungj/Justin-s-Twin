@@ -2,6 +2,7 @@ import math
 import cmath
 from collections import OrderedDict
 from inspect import signature
+from scipy.special import comb
 
 class Calculator:
     lastresult = 0
@@ -56,8 +57,8 @@ class Calculator:
             ("atan", lambda x: math.atan(x)),
             ("exp", lambda x: cmath.exp(x)), 
             ("inv", lambda x: 1/x), 
-            ("C", lambda x, y: math.factorial(x) / math.factorial(y) / math.factorial(x - y)),
-            ("P", lambda x, y: math.factorial(x) / math.factorial(x - y)),
+            ("C", lambda x, y: comb(x, y)),
+            ("P", lambda x, y: ops["C"](x, y) * myfact(y)),
             ("coslaw", lambda a, b, C: math.sqrt(a*a + b*b - 2*a*b*ops["cosd"](C))),
             ("heron", heron)
         ])
@@ -213,11 +214,13 @@ class Calculator:
                 return f"Error type: {type(a[0])}"
         if len(b) == 1:
             ans = b[0]
+            if ans == float('inf'):
+                return "Result too large"
             try:
                 if ans % 1 == 0:
                     ans = int(ans)
-            except:
-                pass
+            except Exception as e:
+                print(e)
             if type(ans) is complex:
                 if abs(ans.real) < 1e-15:
                     ans = complex(0, ans.imag)
