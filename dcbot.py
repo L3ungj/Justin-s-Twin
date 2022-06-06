@@ -1,15 +1,13 @@
 import discord
 from discord.ext import commands
+
 import os
-
-
-with open("token.txt", "r") as fi:
-    my_token = fi.read()
+import asyncio
+from contextlib import suppress
 
 intents = discord.Intents.default()
 intents.members = True
 client = commands.Bot(command_prefix='/', intents=intents)
-
 
 @client.event
 async def on_ready():
@@ -93,10 +91,23 @@ async def reload(ctx, extension):
         return
     await ctx.send(f'Reloaded {extension}.')
 
+def main():
+    with open("token.txt", "r") as fi:
+        my_token = fi.read()
 
-for file in os.listdir('./cogs'):
-    if file.endswith('.py'):
-        if file not in ['chrome.py', 'debug.py']:
-            client.load_extension(f'cogs.{file[:-3]}')
 
-client.run(my_token)
+    for file in os.listdir('./cogs'):
+        if file.endswith('.py'):
+            if file not in ['chrome.py', 'debug.py']:
+                client.load_extension(f'cogs.{file[:-3]}')
+
+    client.run(my_token)
+
+if __name__ == '__main__':
+    main()
+
+    # pending = asyncio.all_tasks()
+    # for task in pending:
+    #     task.cancel()
+    #     with suppress(asyncio.CancelledError):
+    #         loop.run_until_complete(task)
