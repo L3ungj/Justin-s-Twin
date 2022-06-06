@@ -1,7 +1,6 @@
 */__pycache__/*
 __pycache__/*
 .idea/*
-events.json
-orz.json
+*.json
 token.txt
 unused/*

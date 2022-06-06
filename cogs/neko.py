@@ -6,8 +6,11 @@ import random
 import requests
 import datetime
 import asyncio
+import os
+import json
 
 logger = logging.getLogger(__name__)
+FILEPATH = 'neko.json'
 
 # copied from wykoj
 class NekosBestAPI:
@@ -28,18 +31,24 @@ class NekosBestAPI:
 class Neko(commands.Cog):
     def __init__(self, cli):
         self.client = cli
+        if not os.path.exists(FILEPATH):
+            with open(FILEPATH, "w+") as f:
+                f.write('[]')
+        with open(FILEPATH, "r+") as f:
+            self.hourly_neko_channels = json.load(f)
         async def hourly_neko():
             while True:
                 delta = datetime.timedelta(hours=1)
                 now = datetime.datetime.now()
                 next_hour = (now + delta).replace(microsecond=0, second=0, minute=0)
                 wait_seconds = (next_hour - now).seconds
-                print(wait_seconds)
                 await asyncio.sleep(wait_seconds)
                 emb = await self.get_neko_embed()
                 emb.description = f"It's {next_hour.strftime('%X')} now! Time for your hourly neko."
-                channel = cli.get_channel(724821718765404192)
-                await channel.send(embed=emb)
+                for channel_id in self.hourly_neko_channels:
+                    channel = cli.get_channel(channel_id)
+                    await channel.send(embed=emb)
+                await asyncio.sleep(1.)
         loop=asyncio.get_event_loop()
         asyncio.ensure_future(hourly_neko(), loop=loop)
 
@@ -54,8 +63,17 @@ class Neko(commands.Cog):
     async def neko(self, ctx):
         await ctx.send(embed=await self.get_neko_embed())
 
-
-    
+    @commands.command()
+    async def hourlyneko(self, ctx):
+        if ctx.channel.id in self.hourly_neko_channels:
+            self.hourly_neko_channels.remove(ctx.channel.id)
+            await ctx.send(f"Channel {ctx.channel} are removed from the hourly neko service.")
+        else:
+            self.hourly_neko_channels.append(ctx.channel.id)
+            await ctx.send(f"Channel {ctx.channel} are added in the hourly neko service.")
+        with open(FILEPATH, "w") as f:
+            json.dump(self.hourly_neko_channels, f, indent=2)
 
 def setup(client):
     client.add_cog(Neko(client))
+ 
