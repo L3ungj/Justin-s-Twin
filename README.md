@@ -1,5 +1,5 @@
 # Justin-s-Twin
-A discord bot which have many functions.
+A discord bot made for fun.
 
 
 Main functions:
@@ -7,10 +7,6 @@ Main functions:
 /cal:
 
 A calculator that calculates math expressions.
-
-/wa:
-
-Opens wolframalpha.com with chrome webdriver, give inputs to it, and get outputs from it.
 
 /tetris:
 
