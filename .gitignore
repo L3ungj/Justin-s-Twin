@@ -4,3 +4,4 @@ __pycache__/*
 *.json
 token.txt
 unused/*
+venv
