@@ -2,7 +2,6 @@ import math
 import cmath
 from collections import OrderedDict
 from inspect import signature
-from scipy.special import comb
 
 class Calculator:
     lastresult = 0
@@ -57,7 +56,7 @@ class Calculator:
             ("atan", lambda x: math.atan(x)),
             ("exp", lambda x: cmath.exp(x)), 
             ("inv", lambda x: 1/x), 
-            ("C", lambda x, y: comb(x, y)),
+            ("C", lambda x, y: math.comb(x, y)),
             ("P", lambda x, y: ops["C"](x, y) * myfact(y)),
             ("coslaw", lambda a, b, C: math.sqrt(a*a + b*b - 2*a*b*ops["cosd"](C))),
             ("heron", heron)
